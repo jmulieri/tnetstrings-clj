@@ -28,3 +28,24 @@
 
 (deftest nested-array
   (is (= [13 "word" true [1]] (parse "26:2:13#4:word,4:true!4:1:1#]]"))))
+
+(deftest dictionary
+  (is (= {"foo" 123 "bar" 12.3} (parse "25:3:foo,3:123#3:bar,4:12.3^}"))))
+
+(deftest nested-dictionary
+  (is (= {"foo" 123 "baz" {"inner" "hash"} "bar" 12.3} (parse "50:3:foo,3:123#3:baz,15:5:inner,4:hash,}3:bar,4:12.3^}"))))
+
+(deftest nested-dictionary-and-array
+  (is (= [1 true {"foo" 123 "bar" 12.3} "hello"] (parse "48:1:1#4:true!25:3:foo,3:123#3:bar,4:12.3^}5:hello,]"))))
+
+(deftest empty-string
+  (is (= "" (parse "0:,"))))
+
+(deftest empty-boolean
+  (is (= false (parse "0:!"))))
+
+(deftest empty-array
+  (is (= [] (parse "0:]"))))
+
+(deftest empty-dictionary
+  (is (= {} (parse "0:}"))))
