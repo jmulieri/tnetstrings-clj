@@ -22,3 +22,9 @@
 
 (deftest false-boolean
   (is (= false (parse "5:false!"))))
+
+(deftest array
+  (is (= [13 "word" true] (parse "19:2:13#4:word,4:true!]"))))
+
+(deftest nested-array
+  (is (= [13 "word" true [1]] (parse "26:2:13#4:word,4:true!4:1:1#]]"))))
