@@ -49,3 +49,24 @@
 
 (deftest empty-dictionary
   (is (= {} (parse "0:}"))))
+
+(deftest string-encode
+  (is (= "5:hello," (encode "hello"))))
+
+(deftest positive-integer-encode
+  (is (= "4:1234#" (encode 1234))))
+
+(deftest negative-integer-encode
+  (is (= "5:-5555#" (encode -5555))))
+
+(deftest positive-float-encode
+  (is (= "7:923.222^" (encode 923.222))))
+
+(deftest negative-float-encode
+  (is (= "8:-323.212^" (encode -323.212))))
+
+(deftest true-boolean-encode
+  (is (= "4:true!" (encode true))))
+
+(deftest false-boolean-encode
+  (is (= "5:false!" (encode false))))

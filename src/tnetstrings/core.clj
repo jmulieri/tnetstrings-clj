@@ -1,4 +1,5 @@
-(ns tnetstrings.core)
+(ns tnetstrings.core
+  (require [clojure.string]))
 
 (declare parse)
 (declare parse-array)
@@ -40,6 +41,35 @@
           payload     (subs tnetstrings (+ colon-idx 1) (+ colon-idx length 1))
           string-type (subs tnetstrings (+ colon-idx length 1) (+ colon-idx length 2))]
       ((parse-map string-type) payload))))
+
+(declare encode)
+(declare encode-boolean)
+(declare encode-float)
+(declare encode-integer)
+(declare encode-string)
+
+(def encode-map (hash-map String            #(encode-string %)
+                          java.lang.Boolean #(encode-boolean %)
+                          java.lang.Long    #(encode-integer %)
+                          java.lang.Double  #(encode-float %)))
+
+(defn encode-boolean [boolean]
+  (let [bool-str (format "%s" boolean)]
+    (str (.length bool-str) ":" bool-str "!")))
+
+(defn encode-float [float]
+  (let [float-str (clojure.string/replace (format "%f" float) #"0+$" "")]
+    (str (.length float-str) ":" float-str "^")))
+
+(defn encode-integer [integer]
+  (let [int-str (format "%d" integer)]
+    (str (.length int-str) ":" int-str "#")))
+
+(defn encode-string [string]
+  (str (.length string) ":" string ","))
+
+(defn encode [data]
+  ((encode-map (class data)) data))
 
 (defn -main [& args]
   (parse (first args)))
