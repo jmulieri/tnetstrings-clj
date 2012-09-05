@@ -73,7 +73,8 @@
                   clojure.lang.PersistentList     encode-array
                   clojure.lang.PersistentVector   encode-array
                   clojure.lang.PersistentTreeMap  encode-hash
-                  clojure.lang.PersistentArrayMap encode-hash })
+                  clojure.lang.PersistentArrayMap encode-hash
+                  clojure.lang.Keyword            #(encode-string (name %)) })
 
 (defn encode [data]
   ((encode-map (class data)) data))
