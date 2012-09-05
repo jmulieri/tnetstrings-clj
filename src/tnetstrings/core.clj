@@ -40,12 +40,7 @@
           string-type (nth tnetstrings (+ colon-idx length 1))]
       ((parse-map string-type) payload))))
 
-(declare encode encode-boolean encode-float encode-integer encode-string)
-
-(def encode-map { String            #(encode-string %)
-                  java.lang.Boolean #(encode-boolean %)
-                  java.lang.Long    #(encode-integer %)
-                  java.lang.Double  #(encode-float %)})
+(declare encode)
 
 (defn encode-boolean [boolean]
   (let [bool-str (format "%s" boolean)]
@@ -61,6 +56,24 @@
 
 (defn encode-string [string]
   (str (count string) ":" string ","))
+
+(defn encode-array [array]
+  (let [encoded-elements (clojure.string/join "" (map encode array))]
+    (str (count encoded-elements) ":" encoded-elements "]")))
+
+(defn encode-hash [hash]
+  (let [encoded-elements (clojure.string/join "" (map #(str (encode (first %)) (encode (last %))) hash))]
+    (str (count encoded-elements) ":" encoded-elements "}")))
+
+
+(def encode-map { String                          encode-string
+                  java.lang.Boolean               encode-boolean
+                  java.lang.Long                  encode-integer
+                  java.lang.Double                encode-float
+                  clojure.lang.PersistentList     encode-array
+                  clojure.lang.PersistentVector   encode-array
+                  clojure.lang.PersistentTreeMap  encode-hash
+                  clojure.lang.PersistentArrayMap encode-hash })
 
 (defn encode [data]
   ((encode-map (class data)) data))

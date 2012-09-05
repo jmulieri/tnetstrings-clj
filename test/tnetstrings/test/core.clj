@@ -70,3 +70,18 @@
 
 (deftest false-boolean-encode
   (is (= "5:false!" (encode false))))
+
+(deftest array-encode
+  (is (= "19:2:13#4:word,4:true!]" (encode [13 "word" true]))))
+
+(deftest nested-array-encode
+  (is (= "26:2:13#4:word,4:true!4:1:1#]]" (encode [13 "word" true [1]]))))
+
+(deftest dictionary-encode
+  (is (= {"foo" 123 "bar" 12.3} (parse (encode {"foo" 123 "bar" 12.3})))))
+
+(deftest nested-dictionary-encode
+  (is (= {"foo" 123 "baz" {"inner" "hash"} "bar" 12.3} (parse (encode {"foo" 123 "baz" {"inner" "hash"} "bar" 12.3})))))
+
+(deftest nested-dictionary-and-array-encode
+  (is (= [1 true {"foo" 123 "bar" 12.3} "hello"] (parse (encode [1 true {"foo" 123 "bar" 12.3} "hello"])))))
